@@ -54,8 +54,8 @@ footer {
   flex: 50%;
 }
 
-.add-album {
-  flex: 30%;
+.add-box {
+  flex: 80%;
 }
 
 .main-component {
@@ -70,16 +70,28 @@ footer {
 .button {
   padding: 16px;
   margin: 12px;
-  border: 1px #2ec4b6 solid;
+  border: 2px #fff solid;
   border-radius: 25px;
+  box-shadow: 3px 2px 4px #adbba7;
   color: #fff;
   text-transform: uppercase;
   background-color: #2ec4b6;
   cursor: pointer;
 }
 
+.button:hover {
+  background-color: #2ec4b6;
+  background-image: linear-gradient(to bottom, #43d9ca, #21afa1);
+}
+
+.button:active {
+  position: relative;
+  top: 1px;
+  left: 2px;
+}
+
 .delete-button {
-  padding: 4px 8px 4px 8px;
+  padding: 2px;
   margin-left: 8px;
   border: 1px #e71d36 solid;
   border-radius: 5px;
@@ -109,6 +121,8 @@ footer {
 
 .selected {
   background-color: #d3eaca;
+  border: 2px #fff solid;
+  background-color: #eee;
 }
 
 .song {

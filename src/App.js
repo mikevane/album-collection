@@ -208,7 +208,7 @@ function AlbumSnippet({
           onClick={() => deleteAlbum()}
           title="Delete this album"
         >
-          X
+          ❌
         </button>
       </h2>
       <span className="info">
@@ -256,6 +256,24 @@ function Album({ selectedAlbum, secsToMinsAndSecs, handleShowAddSong }) {
 function Song({ track, num, secsToMinsAndSecs }) {
   const songLength = secsToMinsAndSecs(track.lengthInSecs);
 
+  // function deleteAlbum() {
+  //   console.log("test");
+  //   onSetAlbums((albums) =>
+  //     albums.filter((album) => album.id !== selectedAlbum?.id)
+  //   );
+  // }
+
+  // function handleAddSong(track) {
+  //   onSetAlbums((albums) =>
+  //     albums.map((album) =>
+  //       album.id === selectedAlbum.id
+  //         ? { ...album, tracks: [...album.tracks, track] }
+  //         : album
+  //     )
+  //   );
+  //   setSelectedAlbum(null);
+  // }
+
   return (
     <div className="song">
       <li>
@@ -299,7 +317,7 @@ function AddAlbum({ onSetAlbums, handleShowAddAlbum }) {
   }
 
   return (
-    <div className="main-component add-album">
+    <div className="main-component add-box">
       <form className="form" onSubmit={handleSubmit}>
         <label>Album title:</label>
         <input
@@ -352,11 +370,10 @@ function AddSong({
       )
     );
     setSelectedAlbum(null);
-    // setSelectedAlbum(selectedAlbum);
   }
 
   return (
-    <div className="main-component add-album">
+    <div className="main-component add-box">
       <form className="form" onSubmit={handleSubmit}>
         <label>Song title:</label>
         <input
