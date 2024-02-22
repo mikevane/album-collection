@@ -91,17 +91,25 @@ footer {
 }
 
 .delete-button {
-  padding: 2px;
+  padding: 1px 5px 1px 5px;
   margin-left: 8px;
   border: 1px #e71d36 solid;
-  border-radius: 5px;
-  color: #e71d36;
+  border-radius: 22px;
+  color: #fff;
+  font-weight: bold;
   text-transform: uppercase;
-  background-color: #fff;
+  background-color: #e71d36;
   cursor: pointer;
   vertical-align: middle;
   position: relative;
   bottom: 3px;
+}
+
+.checkbox input {
+  height: 20px;
+  width: 20px;
+  vertical-align: text-bottom;
+  margin-left: 12px;
 }
 
 .album {

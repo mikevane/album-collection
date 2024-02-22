@@ -6,9 +6,19 @@ const initialAlbums = [
     title: "Come on Over",
     author: "Shania Twain",
     tracks: [
-      { id: 1, name: "You Are Still the One", lengthInSecs: 225 },
-      { id: 2, name: "Don't Be Stupid", lengthInSecs: 274 },
-      { id: 3, name: "Man! I Feel Like a Woman!", lengthInSecs: 189 },
+      {
+        id: 1,
+        name: "You Are Still the One",
+        lengthInSecs: 225,
+        checked: false,
+      },
+      { id: 2, name: "Don't Be Stupid", lengthInSecs: 274, checked: false },
+      {
+        id: 3,
+        name: "Man! I Feel Like a Woman!",
+        lengthInSecs: 189,
+        checked: false,
+      },
     ],
   },
   {
@@ -16,10 +26,15 @@ const initialAlbums = [
     title: "In Blue",
     author: "The Corrs",
     tracks: [
-      { id: 1, name: "Breathless", lengthInSecs: 285 },
-      { id: 2, name: "Give Me a Reason", lengthInSecs: 302 },
-      { id: 3, name: "Somebody for Someone", lengthInSecs: 178 },
-      { id: 4, name: "All in a Day", lengthInSecs: 227 },
+      { id: 1, name: "Breathless", lengthInSecs: 285, checked: false },
+      { id: 2, name: "Give Me a Reason", lengthInSecs: 302, checked: false },
+      {
+        id: 3,
+        name: "Somebody for Someone",
+        lengthInSecs: 178,
+        checked: false,
+      },
+      { id: 4, name: "All in a Day", lengthInSecs: 227, checked: false },
     ],
   },
   {
@@ -27,10 +42,10 @@ const initialAlbums = [
     title: "Red River Blue",
     author: "Blake Shelton",
     tracks: [
-      { id: 1, name: "Honey Bee", lengthInSecs: 210 },
-      { id: 2, name: "Ready to Roll", lengthInSecs: 222 },
-      { id: 3, name: "Good Ole Boys", lengthInSecs: 183 },
-      { id: 4, name: "Sunny in Seattle", lengthInSecs: 194 },
+      { id: 1, name: "Honey Bee", lengthInSecs: 210, checked: false },
+      { id: 2, name: "Ready to Roll", lengthInSecs: 222, checked: false },
+      { id: 3, name: "Good Ole Boys", lengthInSecs: 183, checked: false },
+      { id: 4, name: "Sunny in Seattle", lengthInSecs: 194, checked: false },
     ],
   },
 ];
@@ -65,13 +80,13 @@ function App() {
       <Flex
         albums={albums}
         onSetAlbums={setAlbums}
-        secsToMinsAndSecs={secsToMinsAndSecs}
         selectedAlbum={selectedAlbum}
-        setSelectedAlbum={setSelectedAlbum}
-        handleShowAddAlbum={handleShowAddAlbum}
+        onSetSelectedAlbum={setSelectedAlbum}
         showAddAlbum={showAddAlbum}
-        handleShowAddSong={handleShowAddSong}
         showAddSong={showAddSong}
+        handleShowAddAlbum={handleShowAddAlbum}
+        handleShowAddSong={handleShowAddSong}
+        secsToMinsAndSecs={secsToMinsAndSecs}
       ></Flex>
       <Totals albums={albums} secsToMinsAndSecs={secsToMinsAndSecs} />
       <Footer />
@@ -88,7 +103,7 @@ function Flex({
   onSetAlbums,
   secsToMinsAndSecs,
   selectedAlbum,
-  setSelectedAlbum,
+  onSetSelectedAlbum,
   handleShowAddAlbum,
   handleShowAddSong,
   showAddAlbum,
@@ -101,13 +116,15 @@ function Flex({
         onSetAlbums={onSetAlbums}
         secsToMinsAndSecs={secsToMinsAndSecs}
         selectedAlbum={selectedAlbum}
-        setSelectedAlbum={setSelectedAlbum}
+        onSetSelectedAlbum={onSetSelectedAlbum}
         handleShowAddAlbum={handleShowAddAlbum}
       />
       <Album
         selectedAlbum={selectedAlbum}
+        onSetSelectedAlbum={onSetSelectedAlbum}
         secsToMinsAndSecs={secsToMinsAndSecs}
         handleShowAddSong={handleShowAddSong}
+        onSetAlbums={onSetAlbums}
       />
       {showAddAlbum && (
         <AddAlbum
@@ -121,7 +138,7 @@ function Flex({
           albums={albums}
           onSetAlbums={onSetAlbums}
           selectedAlbum={selectedAlbum}
-          setSelectedAlbum={setSelectedAlbum}
+          onSetSelectedAlbum={onSetSelectedAlbum}
         />
       )}
     </div>
@@ -132,7 +149,7 @@ function AlbumList({
   albums,
   secsToMinsAndSecs,
   selectedAlbum,
-  setSelectedAlbum,
+  onSetSelectedAlbum,
   handleShowAddAlbum,
   onSetAlbums,
 }) {
@@ -147,7 +164,7 @@ function AlbumList({
           key={album.id}
           secsToMinsAndSecs={secsToMinsAndSecs}
           selectedAlbum={selectedAlbum}
-          setSelectedAlbum={setSelectedAlbum}
+          onSetSelectedAlbum={onSetSelectedAlbum}
           onSetAlbums={onSetAlbums}
         />
       ))}
@@ -164,7 +181,7 @@ function AlbumSnippet({
   album,
   secsToMinsAndSecs,
   selectedAlbum,
-  setSelectedAlbum,
+  onSetSelectedAlbum,
   onSetAlbums,
 }) {
   function countTime(input) {
@@ -179,11 +196,11 @@ function AlbumSnippet({
   }
 
   function handleSelection(album) {
-    setSelectedAlbum((cur) => (cur?.id === album.id ? null : album));
+    onSetSelectedAlbum((cur) => (cur?.id === album.id ? null : album));
   }
 
   function deleteAlbum() {
-    console.log("test");
+    console.log(album.id);
     onSetAlbums((albums) =>
       albums.filter((album) => album.id !== selectedAlbum?.id)
     );
@@ -208,7 +225,7 @@ function AlbumSnippet({
           onClick={() => deleteAlbum()}
           title="Delete this album"
         >
-          ❌
+          X
         </button>
       </h2>
       <span className="info">
@@ -230,8 +247,42 @@ function AlbumSnippet({
   );
 }
 
-function Album({ selectedAlbum, secsToMinsAndSecs, handleShowAddSong }) {
+function Album({
+  selectedAlbum,
+  onSetSelectedAlbum,
+  secsToMinsAndSecs,
+  handleShowAddSong,
+  onSetAlbums,
+}) {
+  const [songsSelected, setSongsSelected] = useState([]);
+
   if (!selectedAlbum) return;
+
+  function handleChange(e) {
+    if (e.target.checked) {
+      setSongsSelected((current) => [...current, Number(e.target.value)]);
+    } else {
+      setSongsSelected(
+        songsSelected.filter((item) => item !== Number(e.target.value))
+      );
+    }
+  }
+
+  function deleteSong() {
+    onSetAlbums((albums) =>
+      albums.map((album) =>
+        album.id === selectedAlbum.id
+          ? {
+              ...album,
+              tracks: album.tracks.filter((track) =>
+                !songsSelected.includes(track.id) ? track : null
+              ),
+            }
+          : album
+      )
+    );
+    onSetSelectedAlbum(null);
+  }
 
   return (
     <div className="main-component album-detail">
@@ -243,36 +294,27 @@ function Album({ selectedAlbum, secsToMinsAndSecs, handleShowAddSong }) {
             key={track.id}
             num={i}
             secsToMinsAndSecs={secsToMinsAndSecs}
+            handleChange={handleChange}
+            songsSelected={songsSelected}
           />
         ))}
       </ul>
       <button className="button" onClick={handleShowAddSong}>
         Add Song
       </button>
+      <button
+        className="button"
+        onClick={deleteSong}
+        title="Delete checked songs"
+      >
+        Delete checked songs
+      </button>
     </div>
   );
 }
 
-function Song({ track, num, secsToMinsAndSecs }) {
+function Song({ track, num, secsToMinsAndSecs, handleChange }) {
   const songLength = secsToMinsAndSecs(track.lengthInSecs);
-
-  // function deleteAlbum() {
-  //   console.log("test");
-  //   onSetAlbums((albums) =>
-  //     albums.filter((album) => album.id !== selectedAlbum?.id)
-  //   );
-  // }
-
-  // function handleAddSong(track) {
-  //   onSetAlbums((albums) =>
-  //     albums.map((album) =>
-  //       album.id === selectedAlbum.id
-  //         ? { ...album, tracks: [...album.tracks, track] }
-  //         : album
-  //     )
-  //   );
-  //   setSelectedAlbum(null);
-  // }
 
   return (
     <div className="song">
@@ -283,6 +325,9 @@ function Song({ track, num, secsToMinsAndSecs }) {
           {songLength[1] < 10 ? `0${songLength[1]}` : `${songLength[1]}`}
         </span>
         )
+        <label className="checkbox">
+          <input type="checkbox" value={track.id} onChange={handleChange} />
+        </label>
       </li>
     </div>
   );
@@ -341,7 +386,7 @@ function AddSong({
   handleShowAddSong,
   onSetAlbums,
   selectedAlbum,
-  setSelectedAlbum,
+  onSetSelectedAlbum,
 }) {
   const [name, setName] = useState("");
   const [lengthInSecs, setLengthInSecs] = useState("");
@@ -352,7 +397,7 @@ function AddSong({
     if (!name || !lengthInSecs) return;
 
     const id = crypto.randomUUID();
-    const newSong = { id, name, lengthInSecs };
+    const newSong = { id, name, lengthInSecs, checked: false };
 
     handleAddSong(newSong);
 
@@ -369,7 +414,7 @@ function AddSong({
           : album
       )
     );
-    setSelectedAlbum(null);
+    onSetSelectedAlbum(null);
   }
 
   return (
@@ -399,7 +444,7 @@ function Totals({ albums, secsToMinsAndSecs }) {
     let totalSongs;
     input.forEach((album) => {
       let length = album.tracks.length;
-      counted.push(length);
+      counted?.push(length);
       totalSongs = counted.reduce((a, b) => a + b);
     });
     return totalSongs;
