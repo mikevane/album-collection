@@ -7,14 +7,14 @@ const initialAlbums = [
     author: "Shania Twain",
     tracks: [
       {
-        id: 1,
+        id: "1",
         name: "You Are Still the One",
         lengthInSecs: 225,
         checked: false,
       },
-      { id: 2, name: "Don't Be Stupid", lengthInSecs: 274, checked: false },
+      { id: "2", name: "Don't Be Stupid", lengthInSecs: 274, checked: false },
       {
-        id: 3,
+        id: "3",
         name: "Man! I Feel Like a Woman!",
         lengthInSecs: 189,
         checked: false,
@@ -26,15 +26,15 @@ const initialAlbums = [
     title: "In Blue",
     author: "The Corrs",
     tracks: [
-      { id: 1, name: "Breathless", lengthInSecs: 285, checked: false },
-      { id: 2, name: "Give Me a Reason", lengthInSecs: 302, checked: false },
+      { id: "4", name: "Breathless", lengthInSecs: 285, checked: false },
+      { id: "5", name: "Give Me a Reason", lengthInSecs: 302, checked: false },
       {
-        id: 3,
+        id: "6",
         name: "Somebody for Someone",
         lengthInSecs: 178,
         checked: false,
       },
-      { id: 4, name: "All in a Day", lengthInSecs: 227, checked: false },
+      { id: "7", name: "All in a Day", lengthInSecs: 227, checked: false },
     ],
   },
   {
@@ -42,10 +42,10 @@ const initialAlbums = [
     title: "Red River Blue",
     author: "Blake Shelton",
     tracks: [
-      { id: 1, name: "Honey Bee", lengthInSecs: 210, checked: false },
-      { id: 2, name: "Ready to Roll", lengthInSecs: 222, checked: false },
-      { id: 3, name: "Good Ole Boys", lengthInSecs: 183, checked: false },
-      { id: 4, name: "Sunny in Seattle", lengthInSecs: 194, checked: false },
+      { id: "8", name: "Honey Bee", lengthInSecs: 210, checked: false },
+      { id: "9", name: "Ready to Roll", lengthInSecs: 222, checked: false },
+      { id: "10", name: "Good Ole Boys", lengthInSecs: 183, checked: false },
+      { id: "11", name: "Sunny in Seattle", lengthInSecs: 194, checked: false },
     ],
   },
 ];
@@ -199,13 +199,6 @@ function AlbumSnippet({
     onSetSelectedAlbum((cur) => (cur?.id === album.id ? null : album));
   }
 
-  function deleteAlbum() {
-    console.log(album.id);
-    onSetAlbums((albums) =>
-      albums.filter((album) => album.id !== selectedAlbum?.id)
-    );
-  }
-
   const totalPlaytime = countTime(album.tracks);
   const totalPlaytimeConverted = totalPlaytime
     ? secsToMinsAndSecs(totalPlaytime)
@@ -217,17 +210,7 @@ function AlbumSnippet({
       className={isSelected ? "album selected" : "album"}
       onClick={() => handleSelection(album)}
     >
-      <h2>
-        💽 {title}
-        <button
-          className="delete-button"
-          value={album.id}
-          onClick={() => deleteAlbum()}
-          title="Delete this album"
-        >
-          X
-        </button>
-      </h2>
+      <h2>💽 {title}</h2>
       <span className="info">
         Author: <b>{author}</b>
       </span>
@@ -260,15 +243,22 @@ function Album({
 
   function handleChange(e) {
     if (e.target.checked) {
-      setSongsSelected((current) => [...current, Number(e.target.value)]);
+      setSongsSelected((current) => [...current, e.target.value]);
     } else {
-      setSongsSelected(
-        songsSelected.filter((item) => item !== Number(e.target.value))
-      );
+      setSongsSelected(songsSelected.filter((item) => item !== e.target.value));
     }
   }
 
+  function deleteAlbum() {
+    onSetAlbums((albums) =>
+      albums.filter((album) => album.id !== selectedAlbum.id)
+    );
+    onSetSelectedAlbum(null);
+  }
+
   function deleteSong() {
+    if (songsSelected.length < 1) return;
+
     onSetAlbums((albums) =>
       albums.map((album) =>
         album.id === selectedAlbum.id
@@ -286,7 +276,17 @@ function Album({
 
   return (
     <div className="main-component album-detail">
-      <h2>{selectedAlbum.title}</h2>
+      <h2>
+        {selectedAlbum.title}
+        <button
+          className="delete-button"
+          value={selectedAlbum.id}
+          onClick={deleteAlbum}
+          title="Delete this album"
+        >
+          X
+        </button>
+      </h2>
       <ul>
         {selectedAlbum.tracks.map((track, i) => (
           <Song

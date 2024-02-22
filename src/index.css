@@ -2,6 +2,7 @@ body {
   margin: 0;
   padding: 8px;
   background-color: #fff;
+  background-image: linear-gradient(to top left, #fff, #bcbcbc);
   color: #011627;
   font-family: Arial, sans-serif;
 }
@@ -12,9 +13,10 @@ h1 {
   padding: 0;
   color: #2ec4b6;
   font-family: "Barlow", sans-serif;
-  font-weight: 400;
+  font-weight: 500;
   font-size: 50px;
   text-align: center;
+  text-shadow: 2px 2px #1a524c;
 }
 
 h2 {
@@ -94,7 +96,7 @@ footer {
   padding: 1px 5px 1px 5px;
   margin-left: 8px;
   border: 1px #e71d36 solid;
-  border-radius: 22px;
+  border-radius: 3px;
   color: #fff;
   font-weight: bold;
   text-transform: uppercase;
