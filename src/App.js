@@ -77,17 +77,37 @@ function App() {
   return (
     <>
       <Header />
-      <Flex
-        albums={albums}
-        onSetAlbums={setAlbums}
-        selectedAlbum={selectedAlbum}
-        onSetSelectedAlbum={setSelectedAlbum}
-        showAddAlbum={showAddAlbum}
-        showAddSong={showAddSong}
-        handleShowAddAlbum={handleShowAddAlbum}
-        handleShowAddSong={handleShowAddSong}
-        secsToMinsAndSecs={secsToMinsAndSecs}
-      ></Flex>
+      <Flex>
+        <AlbumList
+          albums={albums}
+          selectedAlbum={selectedAlbum}
+          setSelectedAlbum={setSelectedAlbum}
+          secsToMinsAndSecs={secsToMinsAndSecs}
+          handleShowAddAlbum={handleShowAddAlbum}
+        />
+        <Album
+          setAlbums={setAlbums}
+          selectedAlbum={selectedAlbum}
+          setSelectedAlbum={setSelectedAlbum}
+          secsToMinsAndSecs={secsToMinsAndSecs}
+          handleShowAddSong={handleShowAddSong}
+        />
+        {showAddAlbum && (
+          <AddAlbum
+            setAlbums={setAlbums}
+            handleShowAddAlbum={handleShowAddAlbum}
+          />
+        )}
+        {showAddSong && (
+          <AddSong
+            albums={albums}
+            setAlbums={setAlbums}
+            selectedAlbum={selectedAlbum}
+            setSelectedAlbum={setSelectedAlbum}
+            handleShowAddSong={handleShowAddSong}
+          />
+        )}
+      </Flex>
       <Totals albums={albums} secsToMinsAndSecs={secsToMinsAndSecs} />
       <Footer />
     </>
@@ -98,60 +118,16 @@ function Header() {
   return <h1>💿 Album Collection 💿</h1>;
 }
 
-function Flex({
-  albums,
-  onSetAlbums,
-  secsToMinsAndSecs,
-  selectedAlbum,
-  onSetSelectedAlbum,
-  handleShowAddAlbum,
-  handleShowAddSong,
-  showAddAlbum,
-  showAddSong,
-}) {
-  return (
-    <div className="flex">
-      <AlbumList
-        albums={albums}
-        onSetAlbums={onSetAlbums}
-        secsToMinsAndSecs={secsToMinsAndSecs}
-        selectedAlbum={selectedAlbum}
-        onSetSelectedAlbum={onSetSelectedAlbum}
-        handleShowAddAlbum={handleShowAddAlbum}
-      />
-      <Album
-        selectedAlbum={selectedAlbum}
-        onSetSelectedAlbum={onSetSelectedAlbum}
-        secsToMinsAndSecs={secsToMinsAndSecs}
-        handleShowAddSong={handleShowAddSong}
-        onSetAlbums={onSetAlbums}
-      />
-      {showAddAlbum && (
-        <AddAlbum
-          onSetAlbums={onSetAlbums}
-          handleShowAddAlbum={handleShowAddAlbum}
-        />
-      )}
-      {showAddSong && (
-        <AddSong
-          handleShowAddSong={handleShowAddSong}
-          albums={albums}
-          onSetAlbums={onSetAlbums}
-          selectedAlbum={selectedAlbum}
-          onSetSelectedAlbum={onSetSelectedAlbum}
-        />
-      )}
-    </div>
-  );
+function Flex({ children }) {
+  return <div className="flex">{children}</div>;
 }
 
 function AlbumList({
   albums,
-  secsToMinsAndSecs,
   selectedAlbum,
-  onSetSelectedAlbum,
+  setSelectedAlbum,
+  secsToMinsAndSecs,
   handleShowAddAlbum,
-  onSetAlbums,
 }) {
   return (
     <div className="main-component album-list">
@@ -164,8 +140,7 @@ function AlbumList({
           key={album.id}
           secsToMinsAndSecs={secsToMinsAndSecs}
           selectedAlbum={selectedAlbum}
-          onSetSelectedAlbum={onSetSelectedAlbum}
-          onSetAlbums={onSetAlbums}
+          setSelectedAlbum={setSelectedAlbum}
         />
       ))}
       <button className="button" onClick={handleShowAddAlbum}>
@@ -181,8 +156,7 @@ function AlbumSnippet({
   album,
   secsToMinsAndSecs,
   selectedAlbum,
-  onSetSelectedAlbum,
-  onSetAlbums,
+  setSelectedAlbum,
 }) {
   function countTime(input) {
     let counted = [];
@@ -196,7 +170,7 @@ function AlbumSnippet({
   }
 
   function handleSelection(album) {
-    onSetSelectedAlbum((cur) => (cur?.id === album.id ? null : album));
+    setSelectedAlbum((cur) => (cur?.id === album.id ? null : album));
   }
 
   const totalPlaytime = countTime(album.tracks);
@@ -232,10 +206,10 @@ function AlbumSnippet({
 
 function Album({
   selectedAlbum,
-  onSetSelectedAlbum,
+  setAlbums,
+  setSelectedAlbum,
   secsToMinsAndSecs,
   handleShowAddSong,
-  onSetAlbums,
 }) {
   const [songsSelected, setSongsSelected] = useState([]);
 
@@ -250,16 +224,16 @@ function Album({
   }
 
   function deleteAlbum() {
-    onSetAlbums((albums) =>
+    setAlbums((albums) =>
       albums.filter((album) => album.id !== selectedAlbum.id)
     );
-    onSetSelectedAlbum(null);
+    setSelectedAlbum(null);
   }
 
   function deleteSong() {
     if (songsSelected.length < 1) return;
 
-    onSetAlbums((albums) =>
+    setAlbums((albums) =>
       albums.map((album) =>
         album.id === selectedAlbum.id
           ? {
@@ -271,7 +245,7 @@ function Album({
           : album
       )
     );
-    onSetSelectedAlbum(null);
+    setSelectedAlbum(null);
   }
 
   return (
@@ -333,7 +307,7 @@ function Song({ track, num, secsToMinsAndSecs, handleChange }) {
   );
 }
 
-function AddAlbum({ onSetAlbums, handleShowAddAlbum }) {
+function AddAlbum({ setAlbums, handleShowAddAlbum }) {
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
 
@@ -358,7 +332,7 @@ function AddAlbum({ onSetAlbums, handleShowAddAlbum }) {
   }
 
   function handleAddAlbum(album) {
-    onSetAlbums((albums) => [...albums, album]);
+    setAlbums((albums) => [...albums, album]);
   }
 
   return (
@@ -384,9 +358,9 @@ function AddAlbum({ onSetAlbums, handleShowAddAlbum }) {
 
 function AddSong({
   handleShowAddSong,
-  onSetAlbums,
+  setAlbums,
   selectedAlbum,
-  onSetSelectedAlbum,
+  setSelectedAlbum,
 }) {
   const [name, setName] = useState("");
   const [lengthInSecs, setLengthInSecs] = useState("");
@@ -407,14 +381,14 @@ function AddSong({
   }
 
   function handleAddSong(track) {
-    onSetAlbums((albums) =>
+    setAlbums((albums) =>
       albums.map((album) =>
         album.id === selectedAlbum.id
           ? { ...album, tracks: [...album.tracks, track] }
           : album
       )
     );
-    onSetSelectedAlbum(null);
+    setSelectedAlbum(null);
   }
 
   return (
