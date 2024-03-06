@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const initialAlbums = [
   {
@@ -213,6 +213,18 @@ function Album({
 }) {
   const [songsSelected, setSongsSelected] = useState([]);
 
+  useEffect(
+    function () {
+      if (!selectedAlbum) return;
+      document.title = `Album Collection: ${selectedAlbum.title}`;
+
+      return function () {
+        document.title = "Album Collection";
+      };
+    },
+    [selectedAlbum]
+  );
+
   if (!selectedAlbum) return;
 
   function handleChange(e) {
@@ -388,7 +400,7 @@ function AddSong({
           : album
       )
     );
-    setSelectedAlbum(null);
+    setSelectedAlbum((selectedAlbum) => null);
   }
 
   return (
